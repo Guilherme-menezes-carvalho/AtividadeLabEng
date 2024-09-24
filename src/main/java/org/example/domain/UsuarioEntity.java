@@ -22,6 +22,7 @@ public class UsuarioEntity {
     public UsuarioEntity(){}
 
     public Long getId() {
+
         return id;
     }
 
