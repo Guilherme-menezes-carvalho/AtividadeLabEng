@@ -1,11 +1,14 @@
 # Etapa 1: Imagem base do Maven para compilar e testar a aplicação
-FROM maven:3.8.6-openjdk-17 AS build
+FROM FROM openjdk:17-alpin as build
 
 # Definir o diretório de trabalho dentro do container
 WORKDIR /app
 
 # Copiar o arquivo pom.xml e baixar as dependências Maven sem o código-fonte
 COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+COPY target/AtividadeLaboratorioEng.jar /app/AtividadeLaboratorioEng.jar
 
 # Instalar as dependências do Maven para cache
 RUN mvn dependency:go-offline -B
@@ -23,10 +26,10 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # Copiar o JAR gerado na etapa de build para a imagem final
-COPY --from=build /app/target/seu-aplicativo.jar /app/seu-aplicativo.jar
+COPY --from=build /app/target/AtividadeLaboratorioEng.jar /app/AtividadeLaboratorioEng.jar
 
 # Expor a porta que a aplicação utilizará
-EXPOSE 8080
+EXPOSE 8083
 
 # Comando para rodar a aplicação
-ENTRYPOINT ["java", "-jar", "seu-aplicativo.jar"]
+ENTRYPOINT ["java", "-jar", "AtividadeLaboratorioEng.jar"]

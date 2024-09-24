@@ -26,7 +26,6 @@ pipeline {
                 junit 'target/surefire-reports/*.xml'
             }
         }
-
          stage('Docker Build') {
                 steps {
                     script {
@@ -43,7 +42,6 @@ pipeline {
                 }
             }
     }
-
     post {
         success {
             echo 'Build and Deploy succeeded!'
