@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
 
-                git 'https://github.com/Guilherme-menezes-carvalho/AtividadeLabEng.git'
+                git 'http://github.com/Guilherme-menezes-carvalho/AtividadeLabEng.git'
             }
         }
 
