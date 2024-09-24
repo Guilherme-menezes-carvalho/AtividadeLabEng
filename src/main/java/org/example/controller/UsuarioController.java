@@ -25,6 +25,8 @@ public class UsuarioController {
     @PostMapping("/cadastrar")
     public ResponseEntity<UsuarioEntity> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO){
 
+
+
         UsuarioEntity novoUsuario = repository.save(usuarioDTO.toEntity());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
