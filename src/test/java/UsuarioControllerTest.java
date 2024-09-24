@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Transactional
 public class UsuarioControllerTest {
 
+
     @Autowired
     private UsuarioController usuarioController;
 
