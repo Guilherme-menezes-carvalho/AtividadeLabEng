@@ -1,53 +1,55 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = "guilhermemenezesc/seu-app:${env.BUILD_ID}" // Ajuste o nome da sua imagem
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Substitua o URL do repositório pelo correto
                 git 'https://github.com/Guilherme-menezes-carvalho/AtividadeLabEng.git'
             }
         }
+
         stage('Build') {
             steps {
-                // Executa o build com Maven no Windows
                 bat 'mvn clean install'
             }
         }
+
         stage('Test') {
             steps {
-                // Executa os testes com Maven no Windows
                 bat 'mvn test'
             }
         }
 
-        stage('Report Tests') {
+        stage('Build Docker Image') {
             steps {
-                junit 'target/surefire-reports/*.xml'
-            }
-        }
-         stage('Docker Build') {
-                steps {
-                    script {
-                        docker.build('pipelineDocker')
-                    }
+                script {
+                    // Comando para construir a imagem Docker usando o Dockerfile
+                    bat 'docker build -t %DOCKER_IMAGE% .'
                 }
             }
+        }
 
-        stage('Docker Run') {
-                steps {
-                    script {
-                        docker.image('pipelineDocker').run('-p 8083:8083')
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Comando para fazer login no Docker Hub e enviar a imagem
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                        bat 'docker push %DOCKER_IMAGE%'
                     }
                 }
             }
-    }
-    post {
-        success {
-            echo 'Build and Deploy succeeded!'
         }
-        failure {
-            echo 'Build or Deploy failed!'
+    }
+
+    post {
+        always {
+            // Limpar imagens locais para evitar acúmulo
+            bat 'docker rmi %DOCKER_IMAGE% || exit 0'
         }
     }
 }
