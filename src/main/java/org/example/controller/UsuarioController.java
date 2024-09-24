@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value = "/usuarios")
 public class UsuarioController {
@@ -19,12 +21,27 @@ public class UsuarioController {
         return ResponseEntity.ok(repository.findById(id).get());
     }
 
-    @PostMapping
-    public ResponseEntity<UsuarioEntity> cadastrarUsuario(@RequestBody UsuarioDTO usuario){
+    @PostMapping("/cadastrar")
+    public ResponseEntity<UsuarioEntity> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO){
 
-        UsuarioEntity novoUsuario = repository.save(usuario.toEntity());
+        UsuarioEntity novoUsuario = repository.save(usuarioDTO.toEntity());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
     }
-}
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<UsuarioEntity> atualizarUsuario(@PathVariable Long id,
+                                                          @RequestBody UsuarioDTO usuarioDTO){
 
+        Optional<UsuarioEntity> usuarioExistente = repository.findById(id);
+
+        if (usuarioExistente.isPresent()) {
+            UsuarioEntity usuario = usuarioExistente.get();
+            usuario.setNome(usuarioDTO.getNome());
+            usuario.setSenha(usuarioDTO.getSenha());
+            repository.save(usuario);
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}

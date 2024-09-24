@@ -66,5 +66,32 @@ public class UsuarioControllerTest {
         assertEquals("888", response.getBody().getSenha());
     }
 
+    @Test
+    public void testAtualizarUsuario() {
+        // Primeiro, cria um usuário para poder atualizá-lo depois
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setNome("guilherme");
+        usuarioDTO.setSenha("888");
 
+        // Salva o usuário
+        UsuarioEntity novoUsuario = usuarioController.cadastrarUsuario(usuarioDTO).getBody();
+        assertNotNull(novoUsuario);
+        Long usuarioId = novoUsuario.getId();
+
+        // Agora atualizamos o usuário
+        UsuarioDTO usuarioAtualizadoDTO = new UsuarioDTO();
+        usuarioAtualizadoDTO.setNome("guilherme atualizado");
+        usuarioAtualizadoDTO.setSenha("999");
+
+        UsuarioEntity usuarioAtualizado = usuarioController.atualizarUsuario(usuarioId, usuarioAtualizadoDTO).getBody();
+
+        // Verifica se o nome e a senha foram atualizados corretamente
+        assertNotNull(usuarioAtualizado);
+        assertEquals("guilherme atualizado", usuarioAtualizado.getNome());
+        assertEquals("999", usuarioAtualizado.getSenha());
+
+        // Verifica se ainda há apenas um usuário no repositório
+        assertEquals(1, usuarioRepository.count());
+
+    }
 }
