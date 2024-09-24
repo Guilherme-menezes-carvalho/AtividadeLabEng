@@ -20,6 +20,12 @@ pipeline {
                 bat 'mvn test'
             }
         }
+
+        stage('Report Tests') {
+            steps {
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
         stage('Package') {
             steps {
                 // Empacota o projeto com Maven no Windows
