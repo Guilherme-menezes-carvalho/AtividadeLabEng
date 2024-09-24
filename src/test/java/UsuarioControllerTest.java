@@ -37,7 +37,7 @@ public class UsuarioControllerTest {
 
         // Verifica se o usuário foi salvo corretamente
         assertEquals("guilherme", novoUsuario.getNome());
-        assertEquals("888", novoUsuario.getSenha());
+        assertEquals("8882", novoUsuario.getSenha());
 
         // Verifica se o usuário está no banco de dados
         assertEquals(1, usuarioRepository.count()); // Deve haver 1 usuário
