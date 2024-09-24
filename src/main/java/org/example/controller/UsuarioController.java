@@ -18,6 +18,7 @@ public class UsuarioController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UsuarioEntity> consultaPorId(@PathVariable Long id){
+
         return ResponseEntity.ok(repository.findById(id).get());
     }
 
