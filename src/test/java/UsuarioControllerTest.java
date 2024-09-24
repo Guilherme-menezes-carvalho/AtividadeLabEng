@@ -64,7 +64,7 @@ public class UsuarioControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("guilherme", response.getBody().getNome());
-        assertEquals("888", response.getBody().getSenha());
+        assertEquals("8882", response.getBody().getSenha());
     }
 
     @Test
