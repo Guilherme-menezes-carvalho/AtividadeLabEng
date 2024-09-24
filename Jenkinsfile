@@ -26,18 +26,22 @@ pipeline {
                 junit 'target/surefire-reports/*.xml'
             }
         }
-        stage('Package') {
-            steps {
-                // Empacota o projeto com Maven no Windows
-                bat 'mvn package'
+
+         stage('Docker Build') {
+                steps {
+                    script {
+                        docker.build('pipelineDocker')
+                    }
+                }
             }
-        }
-        stage('Deploy') {
-            steps {
-                // Coloque aqui seus comandos de deploy, por exemplo, usando SCP ou outra ferramenta
-                bat 'copy target\\*.jar \\\\path\\to\\deploy\\'
+
+        stage('Docker Run') {
+                steps {
+                    script {
+                        docker.image('pipelineDocker').run('-p 8083:8083')
+                    }
+                }
             }
-        }
     }
 
     post {
